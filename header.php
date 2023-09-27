@@ -17,11 +17,12 @@
                 <h2>Profile</h2>
             </button>
 
-
-            <button class="flex flex-col items-center font-bold">
-                <img class="w-8" src="public/images/logout.png" />
-                <h2>Logout</h2>
-            </button>
+            <a href="logout.php">
+                <button class="flex flex-col items-center font-bold">
+                    <img class="w-8" src="public/images/logout.png" />
+                    <h2>Logout</h2>
+                </button>
+            </a>
         </div>
     </div>
 
