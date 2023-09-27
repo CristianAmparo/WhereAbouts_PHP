@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+@layer base {
+
+
+    body {
+        @apply font-mono
+    }
+
+    input,
+    select {
+        @apply h-8 rounded-sm px-2 text-sm shadow-md
+    }
+
+    label {
+        @apply text-sm mt-2
+    }
+
+    option {
+        @apply text-sm
+    }
+
+    h1 {
+        @apply text-3xl font-bold w-full text-center mb-5
+    }
+
+    h2 {
+        @apply text-[12px]
+    }
+
+    .red-border {
+        border: 1px solid red;
+    }
+
+    .hero {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 385px);
+        gap: 20px;
+    }
+
+}
