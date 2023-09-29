@@ -1,4 +1,26 @@
-<!doctype html>
+<?php
+include('database.php');
+include('header.php');
+include('profile.php');
+
+// Check if the user is logged in
+if (empty($_SESSION['loggedin'])) {
+    header("Location: login.php");
+} else {
+    $departments = ["Department of Information Technology", "Department of Engineering", "Department of Architecture"];
+}
+
+// Initialize the search query variable
+$searchQuery = '';
+
+// Check if a search query has been submitted
+if (isset($_GET['search'])) {
+    $searchQuery = mysqli_real_escape_string($conn, $_GET['search']);
+}
+
+?>
+
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -8,40 +30,30 @@
 </head>
 
 <body>
-
     <main class=" bg-[#F4F1E8] min-h-screen w-full pt-28 p-10 ">
         <div class="mb-5 fixed ">
-            <form method="post" action="<?php echo htmlspecialchars('hero.php'); ?>">
-                <img class="absolute top-1.5 left-2 w-5" src="public/images/search.png" alt="" />
-                <input class="w-80 pl-10" type="text" name="search" placeholder="Search your instructor" />
+            <img class="absolute top-1.5 left-2 w-5" src="public/images/search.png" alt="" />
+            <form method="GET" action="">
+                <input class="w-80 pl-10" type="text" name="search" placeholder="Search your instructor" value="<?php echo $searchQuery; ?>" />
                 <button type="submit" class="absolute top-1.2 border-2 border-black right-2 px-2 py-1 bg-green-700 text-white text-sm rounded hover:bg-black">Search</button>
             </form>
         </div>
 
-
         <?php
-        include('database.php');
-        include('header.php');
-        include('profile.php');
-        if (empty($_SESSION['loggedin'])) {
-            header("Location: login.php");
-        } else {
-            $departments = ["Department of Information Technology", "Department of Engineering", "Department of Architecture"];
-            $searchQuery = isset($_POST['search']) ? $_POST['search'] : ''; // Get the search query if provided
-
-            $sql = "SELECT * FROM users";
-            $result = mysqli_query($conn, $sql);
-        }
         foreach ($departments as $department) {
             $sql = "SELECT * FROM users WHERE department = '$department'";
+
+            // Append a search filter if a search query exists
             if (!empty($searchQuery)) {
                 $sql .= " AND (fName LIKE '%$searchQuery%' OR lName LIKE '%$searchQuery%')";
             }
+
             $result = mysqli_query($conn, $sql);
 
             // Display the department name
             echo '<div class="text-2xl p-10 flex"><div class="mr-96 text-center  w-full">' . $department . '</div></div>';
             echo '<div class="hero items-center justify-center mr-96">';
+
 
             if ($result) {
                 while ($row = mysqli_fetch_assoc($result)) {
