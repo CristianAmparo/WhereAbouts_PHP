@@ -30,6 +30,7 @@ if (isset($_GET['search'])) {
 </head>
 
 <body>
+
     <main class=" bg-[#F4F1E8] min-h-screen w-full pt-28 p-10 ">
         <div class="mb-5 fixed ">
             <img class="absolute top-1.5 left-2 w-5" src="public/images/search.png" alt="" />
@@ -38,6 +39,7 @@ if (isset($_GET['search'])) {
                 <button type="submit" class="absolute top-1.2 border-2 border-black right-2 px-2 py-1 bg-green-700 text-white text-sm rounded hover:bg-black">Search</button>
             </form>
         </div>
+
 
         <?php
         foreach ($departments as $department) {
@@ -54,7 +56,6 @@ if (isset($_GET['search'])) {
             echo '<div class="text-2xl p-10 flex"><div class="mr-96 text-center  w-full">' . $department . '</div></div>';
             echo '<div class="hero items-center justify-center mr-96">';
 
-
             if ($result) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     $bgColorClass = "";
@@ -70,7 +71,7 @@ if (isset($_GET['search'])) {
                     // Display user data for the current department
                     echo '<div class="flex items-center h-32 bg-white w-96 space-x-3 p-5 rounded-xl shadow-md">';
                     echo '<div>';
-                    echo '<img class="w-14" src="public/images/profile.png" />';
+                    echo '<img class="w-14" src="images/' . ($row['image'] ? $row['image'] : 'profile.png') . '"/>';
                     echo '</div>';
                     echo '<div class="space-y-1">';
                     echo '<div>';

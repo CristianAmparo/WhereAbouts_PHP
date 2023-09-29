@@ -5,12 +5,33 @@ $errors = ""; // Initialize the variable to store validation errors
 // Check if the form has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve data from the form using $_POST
-    $firstName = $_POST["fname"];
-    $lastName = $_POST["lname"];
+    $firstName = filter_input(INPUT_POST, "fname", FILTER_SANITIZE_SPECIAL_CHARS);
+    $lastName = filter_input(INPUT_POST, "lname", FILTER_SANITIZE_SPECIAL_CHARS);
     $department = $_POST["department"];
     $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_SPECIAL_CHARS);
     $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
     $repeatPassword = filter_input(INPUT_POST, "repeatPassword", FILTER_SANITIZE_SPECIAL_CHARS);
+    $image = $_FILES['image'];
+
+    if ($image['error'] === UPLOAD_ERR_OK) {
+        $fileTmpName = $image['tmp_name'];
+        $fileName = basename($image['name']);
+        $uniqueFileName = uniqid() . '_' . $fileName;
+
+        // Construct the destination path
+        $uploadDir = './images/'; // Change this to your desired upload directory
+        $uploadPath = $uploadDir . $uniqueFileName;
+
+        // Move the uploaded file to the destination directory
+        if (move_uploaded_file($fileTmpName, $uploadPath)) {
+            // File moved successfully
+        } else {
+            $errors = "File upload failed";
+        }
+    } else {
+        $errors = "File upload failed with error code: " . $image['error'];
+    }
+
 
     // Perform validation and processing
     if ($password !== $repeatPassword) {
@@ -28,10 +49,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             // Use prepared statement to insert data safely
             $hash = password_hash($password, PASSWORD_DEFAULT);
-            $insertQuery = "INSERT INTO users (fName, lName, department, username, password) 
-                            VALUES (?, ?, ?, ?, ?)";
+            $insertQuery = "INSERT INTO users (fName, lName, department, username, password, image) 
+            VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($conn, $insertQuery);
-            mysqli_stmt_bind_param($stmt, "sssss", $firstName, $lastName, $department, $username, $hash);
+            mysqli_stmt_bind_param(
+                $stmt,
+                "ssssss",
+                $firstName,
+                $lastName,
+                $department,
+                $username,
+                $hash,
+                $uniqueFileName
+            );
+
 
             if (mysqli_stmt_execute($stmt)) {
                 header("location: login.php");
@@ -61,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class='w-full h-screen flex items-center justify-center'>
         <div class='bg-[#F4F1E8] w-max h-max mx-auto p-10 shadow-2xl rounded-lg'>
             <h1>WhereAbouts</h1>
-            <form id="signup-form" class='flex flex-col' method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+            <form id="signup-form" class='flex flex-col' method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
                 <div class="flex gap-2">
                     <div class="flex flex-col">
                         <label for="fname">First Name</label>

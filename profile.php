@@ -42,6 +42,7 @@ if ($result) {
     $status = $row['status'];
     $availability = $row['availability'];
     $location = $row['location'];
+    $image = $row['image'];
 }
 
 $bgColorClass = "";
@@ -77,7 +78,10 @@ if ($status === "In") {
 <body>
     <section class="fixed right-0 top-0  z-0 h-screen pt-28 w-96 bg-[#F8EFD1] shadow-2xl">
         <div class="flex flex-col items-center">
-            <img class='w-32' src="public/images/profile.png" alt="" />
+
+            <div class="w-32 overflow-hidden ">
+                <img class='w-32 ' src="images/<?php echo $image ?>" alt="" />
+            </div>
             <h3 class="text-2xl font-bold"><?php echo $name ?></h3>
             <h3>Department of Information Technology</h3>
             <div class="mt-5 justify-center bg-black w-3/4 h-0.5"></div>
