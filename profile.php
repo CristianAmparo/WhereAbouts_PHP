@@ -1,14 +1,19 @@
 <?php
+session_start();
 include('database.php');
 
 
+
 $username = $_SESSION['username'];
+$error = "";
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if (empty($_POST['status'])) {
-        $_POST['status'] = "";
+        $error = "<div>Choose your Status to update!</div>";
     }
-    $newStatus = $_POST['status'];
+    $newStatus = isset($_POST['status']) ?  $_POST['status'] : "";
     $newAvailability = isset($_POST['availability']) ? $_POST['availability'] : "";
     $newLocation = isset($_POST['location']) ? $_POST['location'] : "";
 
@@ -125,16 +130,18 @@ if ($status === "In") {
                 <div class='text-center mt-3'>
                     <a href="hero.php"><button class='mx-auto w-2/3 p-2 rounded-lg shadow-lg bg-slate-500 text-white text-lg self-center'>Update</button></a>
                 </div>
-                <div class="w-3/4 mx-auto bg-white space-x-3 p-5 rounded-xl shadow-md font-bold flex items-center justify-center mt-3 ">
-                    <?php
-                    echo '<div class="flex space-x-2">';
-                    echo $status ? '<h4 class="' . $bgColorClass . ' px-4 py-0.5 rounded-2xl border-2 border-black">' . $status . '</h4>' : "";
-                    echo $availability ? '<h4 class="' . ($availability === "Available" ? 'bg-yellow-500' : 'bg-gray-200') . ' px-4 py-0.5 rounded-2xl border-2 border-black">' . $availability . '</h4>' : "";
-                    echo $location ? '<h4 class=" bg-gray-300 px-4 py-0.5 rounded-2xl border-2 border-black">' . $location . '</h4>' : "";
-                    echo '</div>';
-                    ?>
-                </div>
-            </form>
+
+                <?php
+                echo $error;
+                echo ' <div class="w-3/4 mx-auto bg-white space-x-3 p-5 rounded-xl shadow-md font-bold flex items-center justify-center mt-3 ">';
+                echo '<div class="flex space-x-2">';
+                echo $status ? '<h4 class="' . $bgColorClass . ' px-4 py-0.5 rounded-2xl border-2 border-black">' . $status . '</h4>' : "";
+                echo $availability ? '<h4 class="' . ($availability === "Available" ? 'bg-yellow-500' : 'bg-gray-200') . ' px-4 py-0.5 rounded-2xl border-2 border-black">' . $availability . '</h4>' : "";
+                echo $location ? '<h4 class=" bg-gray-300 px-4 py-0.5 rounded-2xl border-2 border-black">' . $location . '</h4>' : "";
+                echo '</div>';
+                ?>
+        </div>
+        </form>
         </div>
     </section>
 
